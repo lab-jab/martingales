@@ -2,7 +2,6 @@ remove(list = ls())
 library(keras)
 library(vrtest)
 library("readxl")
-setwd("C:/Users/jbastos/1_research/99_GitHub/martingales/code")
 source("TS_gen.R")
 
 convnet = function(size) {
