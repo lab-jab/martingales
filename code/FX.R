@@ -41,6 +41,10 @@ history = m %>% fit(xT, yT, batch_size = 32, epochs = 50)
 
 # Scores, critical values and p-values
 
+data(exrates)
+M = nrow(exrates) - 1
+N = 100000
+
 m = load_model_hdf5(file = "../convnets/Wright2001.h5")
 
 H0 = matrix(0, nrow = N, ncol = M)
