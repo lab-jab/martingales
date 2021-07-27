@@ -45,7 +45,7 @@ data(exrates)
 M = nrow(exrates) - 1
 N = 100000
 
-m = load_model_hdf5(file = "../convnets/Wright2001.h5")
+m = load_model_hdf5(file = "convnets/Wright2001.h5")
 
 H0 = matrix(0, nrow = N, ncol = M)
 for(i in 1:N) {
@@ -58,8 +58,10 @@ for(fx in (names(exrates))) {
   r = log(y[2:length(y)]) - log(y[1:(length(y)-1)])
   r_convnet = array_reshape(scale(r), c(1,M,1))
   score  = m %>% predict(r_convnet, verbose = 0)
-  pvalue = sum(H0_dist > rep(score, N)) / N
-  cat(fx, score, pvalue, AutoBoot.test(r, nboot = 5000, wild = "Normal")$pval, "\n")
+  pvalue_CNN = sum(H0_dist > rep(score, N)) / N
+  pvalue_AVR = AutoBoot.test(r, nboot = 500, wild = "Normal")$pval
+  pvalue_AQ = Auto.Q(r, lags = 10)$Pvalue
+  cat(fx, pvalue_CNN, pvalue_AVR, pvalue_AQ, "\n")
 }
 
 # ==================================================================================================
@@ -87,9 +89,6 @@ history = m %>% fit(xT, yT, batch_size = 32, epochs = 50)
 
 # Scores, critical values and p-values
 
-#m = load_model_hdf5(file = "../convnets/FRNY_weekly.h5")
-m = load_model_hdf5(file = "../convnets/FRNY_monthly.h5")
-
 #M = 1095 # weekly data
 M = 251  # monthly data
 N = 100000
@@ -100,8 +99,11 @@ for(i in 1:N) {
 }
 H0_dist = m %>% predict(array_reshape(H0, c(dim(H0), 1)))
 
-#df = data.frame(read_excel("../data/FX_rates.xlsx", sheet = "weekly", col_names = TRUE, na = "NA"))
-df = data.frame(read_excel("../data/FX_rates.xlsx", sheet = "monthly", col_names = TRUE, na = "NA"))
+#m = load_model_hdf5(file = "convnets/FRNY_weekly.h5")
+m = load_model_hdf5(file = "convnets/FRNY_monthly.h5")
+
+#df = data.frame(read_excel("data/FX_rates.xlsx", sheet = "weekly", col_names = TRUE, na = "NA"))
+df = data.frame(read_excel("data/FX_rates.xlsx", sheet = "monthly", col_names = TRUE, na = "NA"))
 
 for(fx in names(df[-1])) {
   y = df[,fx]
@@ -109,7 +111,9 @@ for(fx in names(df[-1])) {
   r = r[(length(r) - M + 1):length(r)]
   r_convnet = array_reshape(scale(r), c(1,M,1))
   score  = m %>% predict(r_convnet, verbose = 0)
-  pvalue = sum(H0_dist > rep(score, N)) / N
-  cat(fx, score, pvalue, AutoBoot.test(r, nboot = 5000, wild = "Normal")$pval, "\n")
+  pvalue_CNN = sum(H0_dist > rep(score, N)) / N
+  pvalue_AVR = AutoBoot.test(r, nboot = 500, wild = "Normal")$pval
+  pvalue_AQ = Auto.Q(r, lags = 10)$Pvalue
+  cat(fx, pvalue_CNN, pvalue_AVR, pvalue_AQ, "\n")
 }
 
