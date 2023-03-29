@@ -2,7 +2,7 @@
 
 ### data folder  
 - FX_rates.xlsx (exchange rates from the Federal Reserve of New York)
-- The Wright (2001) data is included in the vrtest package
+- The Wright (2001) data are included in the vrtest package
 
 ### code folder
 - TS_gen.R (functions for generating returns)
