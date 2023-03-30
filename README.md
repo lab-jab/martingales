@@ -1,5 +1,5 @@
-## Replication files for
 ## A deep learning test of the martingale difference hypothesis
+## Replication files
 
 ### data folder  
 - FX_rates.xlsx (exchange rates from the Federal Reserve of New York)
