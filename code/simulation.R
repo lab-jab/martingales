@@ -118,6 +118,7 @@ for(M in c(100,500,1000)) {
   m <- convnet(M)
   history <- m %>% fit(xT, yT, batch_size = 32, epochs = 50, validation_data = list(xV, yV))
   scores  <- m %>% predict(xV)
+  scores_H0 <- scores[1:(N/2)]
   scores_H1 <- scores[(N/2+1):N]
   crit_value <- np_crit_value(scores_H0, 0.05, 0.05)
   print(100*sum((scores_H1 > crit_value) / length(scores_H1)))
